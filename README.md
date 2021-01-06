@@ -38,17 +38,14 @@ AbstractStringBuilder(int capacity) {
     
     //调用父类的AbstractStringBulider的方法
     public AbstractStringBuilder append(String str) {
-        //如果传进来的是null
         if (str == null)
-            //下方解释
             return appendNull();
-            
-        //如果不是null,获取str.length的长度
         int len = str.length();
-        //重要方法，下面解释
         ensureCapacityInternal(count + len);
         str.getChars(0, len, value, count);
         count += len;
         return this;
     }
 ```
+- append主要分为null和非null,首先判断最加的字符串是不是null,如果是null调用appendNull()方法，如果不是null,获取len(追加字符串的长度)后调用ensurCapacityInternal()方法。
+- ensurCapacityInternal()方法的参数是count+len,我们测试代码中append("123"),第一次进来，count是0，因此就是0+3,第二次count就变成了3，因此可以看出该方法的参数是要存放字符串的长度。
