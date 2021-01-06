@@ -60,3 +60,5 @@ AbstractStringBuilder(int capacity) {
     }
 ```
      - 判断字符串的长度是否大于目前char[]数组的长度
+     - 如果字符串长度比char[]大，新建一个char[]并通过Arrays.copyOf把原来的char[]拷贝进去
+     - 当然如果小于的话，这个方法其实就是走个过场，没什么用，直接调用的是append()方法中的str.getChars(0, len, value, count);
