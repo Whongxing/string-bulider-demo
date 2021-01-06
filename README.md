@@ -78,4 +78,39 @@ AbstractStringBuilder(int capacity) {
 - 可以看到newCapacity = 原数组长度左移一位 +  2，也就是2倍+2
 - 然后用扩容后的2倍+2和要存的字符串长度比较，字符串的长度长，那么直接将字符串的长度设定为扩容的长度。
 - 最后是，如果 newCapacity 超过了当前数组的最大值的时候，执行 hugeCapacity()方法，如果没有，返回新扩容后的数组
+##### str.getChars(0, len, value, count)方法源码
+```
+    public void getChars(int srcBegin, int srcEnd, char dst[], int dstBegin) {
+        if (srcBegin < 0) {
+            throw new StringIndexOutOfBoundsException(srcBegin);
+        }
+        if (srcEnd > value.length) {
+            throw new StringIndexOutOfBoundsException(srcEnd);
+        }
+        if (srcBegin > srcEnd) {
+            throw new StringIndexOutOfBoundsException(srcEnd - srcBegin);
+        }
+        System.arraycopy(value, srcBegin, dst, dstBegin, srcEnd - srcBegin);
+    }
+```
+- 从入参来看，getChar(0, 要拼接字符串的长度，当前数组，未拼接时候字符串的长度)
+- 如果要拼接字符串长度大于当前数组长度抛异常，如果0>要拼接字符串长度，抛异常
+- 通过调用 System.arraycopy()系统方法完成将当前字符串的 scrBegin ~ srcEnd 复制到字符数组的 dstBegin 位置。
+- 将第一个参数-第二个参数长度的字符串复制到第三个参数中第四个参数的位置
+# 处理append(null)
+```
+    private AbstractStringBuilder appendNull() {
+        int c = count;
+        ensureCapacityInternal(c + 4);
+        final char[] value = this.value;
+        value[c++] = 'n';
+        value[c++] = 'u';
+        value[c++] = 'l';
+        value[c++] = 'l';
+        count = c;
+        return this;
+    }
+```
+- 确保容量足够后，追加4个字符到字符数组。
+
 
