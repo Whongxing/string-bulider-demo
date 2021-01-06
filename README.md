@@ -49,3 +49,14 @@ AbstractStringBuilder(int capacity) {
 ```
 - append主要分为null和非null,首先判断最加的字符串是不是null,如果是null调用appendNull()方法，如果不是null,获取len(追加字符串的长度)后调用ensurCapacityInternal()方法。
 - ensurCapacityInternal()方法的参数是count+len,我们测试代码中append("123"),第一次进来，count是0，因此就是0+3,第二次count就变成了3，因此可以看出该方法的参数是要存放字符串的长度。
+##### 进入ensurCapacityInternal()方法
+```
+    private void ensureCapacityInternal(int minimumCapacity) {
+        // overflow-conscious code
+        if (minimumCapacity - value.length > 0) {
+            value = Arrays.copyOf(value,
+                    newCapacity(minimumCapacity));
+        }
+    }
+```
+     - 判断字符串的长度是否大于目前char[]数组的长度
