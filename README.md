@@ -147,4 +147,17 @@ StringBulider  是      abcdfecghgi
 需要知道的是  【原来的abcdfecghgi】, 【2+(5-2)要删除的长度】删除终止位 ,  【原来的字符数组】 ，  【开始位置】， 【末尾剩了几位】 
 
 # stringBulider.inster()方法解析拼前缀
-
+```
+    public AbstractStringBuilder insert(int offset, String str) {
+        if ((offset < 0) || (offset > length()))
+            throw new StringIndexOutOfBoundsException(offset);
+        if (str == null)
+            str = "null";
+        int len = str.length();
+        ensureCapacityInternal(count + len);
+        System.arraycopy(value, offset, value, offset + len, count - offset);
+        str.getChars(value, offset);
+        count += len;
+        return this;
+    }
+```
