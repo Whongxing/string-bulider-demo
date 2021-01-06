@@ -60,5 +60,22 @@ AbstractStringBuilder(int capacity) {
     }
 ```
      - 判断字符串的长度是否大于目前char[]数组的长度
-     - 如果字符串长度比char[]大，新建一个char[]并通过Arrays.copyOf把原来的char[]拷贝进去
+     - 如果字符串长度比char[]大，新建一个char[]并通过Arrays.copyOf把原来的char[]拷贝进去，核心是newCapacity()方法，入参为要存的字符串长度。
      - 当然如果小于的话，这个方法其实就是走个过场，没什么用，直接调用的是append()方法中的str.getChars(0, len, value, count);
+```
+    private int newCapacity(int minCapacity) {
+        // overflow-conscious code
+        int newCapacity = (value.length << 1) + 2;
+        if (newCapacity - minCapacity < 0) {
+            newCapacity = minCapacity;
+        }
+        return (newCapacity <= 0 || MAX_ARRAY_SIZE - newCapacity < 0)
+            ? hugeCapacity(minCapacity)
+            : newCapacity;
+    }
+```
+- newCapacity和minCapacity
+- 可以看到newCapacity = 原数组长度左移一位 +  2，也就是2倍+2
+- 然后用扩容后的2倍+2和要存的字符串长度比较，字符串的长度长，那么直接将字符串的长度设定为扩容的长度。
+- 最后是，如果 newCapacity 超过了当前数组的最大值的时候，执行 hugeCapacity()方法，如果没有，返回新扩容后的数组
+
