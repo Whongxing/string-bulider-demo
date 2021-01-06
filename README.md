@@ -16,7 +16,7 @@ public static void main(String[] args) {
         str.append("null");
     }
 ```
-# 首先是Stringbulider的构造函数
+# 一、首先是Stringbulider的构造函数
 ```
 public StringBuilder() {
         super(16);
@@ -27,7 +27,7 @@ AbstractStringBuilder(int capacity) {
 }
 ```
 可以看到，stringBuilder是调用了父类的构造方法并且传了一个16进去，而父类的构造函数是创建了一个16的char[]数组。
-# append()方法解析
+# 二、append()方法解析
 ### 源码
 ```
     @Override
@@ -112,5 +112,39 @@ AbstractStringBuilder(int capacity) {
     }
 ```
 - 确保容量足够后，追加4个字符到字符数组。
+# 三、stringBulider.delete()方法解析
+##### 源码
+```
+    public StringBuilder delete(int start, int end) {
+        super.delete(start, end);
+        return this;
+    }
+    
+    public AbstractStringBuilder delete(int start, int end) {
+        if (start < 0)
+            throw new StringIndexOutOfBoundsException(start);
+        if (end > count)
+            end = count;
+        if (start > end)
+            throw new StringIndexOutOfBoundsException();
+        int len = end - start;
+        if (len > 0) {
+            System.arraycopy(value, start+len, value, start, count-end);
+            count -= len;
+        }
+        return this;
+    }
+```
+- 如果start小于0，直接抛异常
+- 判断end是不是大于数组长度，如果大于让end等于数组长度
+- 判断start是否大于end,如果大于，直接抛异常
+- 如果本身字符数组是空的，直接返回，否则调用System.arraycopy(value, start+len, value, start, count-end); 这是一个本地方法
+- 原来字符数组，要删除的起始位置+要删除的长度， 原来的字符数组 ，删除的起始位置 ， 字符串长度-要删除的终止位置
+### 例如
+StringBulider  是      abcdfecghgi
+删除   stringBulider.delete(2,5);
 
+需要知道的是  【原来的abcdfecghgi】, 【2+(5-2)要删除的长度】删除终止位 ,  【原来的字符数组】 ，  【开始位置】， 【末尾剩了几位】 
+
+# stringBulider.inster()方法解析拼前缀
 
